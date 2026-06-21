@@ -64,12 +64,12 @@ export default function Experience() {
               const Icon = entry.icon
               const isEven = i % 2 === 0
               return (
-                <div key={i} className={`flex flex-col md:flex-row items-stretch ${isEven ? "md:flex-row-reverse" : ""}`}>
+                <div key={i} className={`relative flex flex-col md:flex-row items-stretch ${isEven ? "md:flex-row-reverse" : ""}`}>
                   {/* Left/Right space taker on desktop */}
                   <div className="hidden md:block w-1/2" />
 
                   {/* Icon Node in the Center */}
-                  <div className="absolute left-4 md:left-1/2 w-10 h-10 rounded-full bg-bg-deep border-2 border-border flex items-center justify-center -translate-x-1/2 z-10 transition-colors">
+                  <div className="absolute left-4 md:left-1/2 top-6 w-10 h-10 rounded-full bg-bg-deep border-2 border-border flex items-center justify-center -translate-x-1/2 z-10 transition-colors">
                     <Icon size={16} style={{ color: entry.color }} />
                   </div>
 

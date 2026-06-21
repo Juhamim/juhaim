@@ -17,7 +17,7 @@ const projects = [
     tech: ["Python", "TensorFlow", "React.js", "WebSockets", "PostgreSQL"],
     color: "#e60000",
     icon: Shield,
-    span: "lg:col-span-2",
+    span: "md:col-span-2",
     github: "https://github.com/Juhamim",
     live: "#"
   },
@@ -32,7 +32,7 @@ const projects = [
     tech: ["React.js", "Next.js", "PostgreSQL", "AWS S3", "Razorpay"],
     color: "#00f3ff",
     icon: Users,
-    span: "lg:col-span-1",
+    span: "md:col-span-1",
     github: "https://github.com/Juhamim",
     live: "#"
   },
@@ -47,7 +47,7 @@ const projects = [
     tech: ["Python", "SIEM API", "Docker", "REST APIs"],
     color: "#ff00ff",
     icon: Zap,
-    span: "lg:col-span-1",
+    span: "md:col-span-1",
     github: "https://github.com/Juhamim",
     live: "#"
   },
@@ -62,7 +62,7 @@ const projects = [
     tech: ["Next.js", "Cloudflare R2", "Node.js", "Tailwind CSS"],
     color: "#00f3ff",
     icon: Cloud,
-    span: "lg:col-span-2",
+    span: "md:col-span-2",
     github: "https://github.com/Juhamim",
     live: "#"
   },
