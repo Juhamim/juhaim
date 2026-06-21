@@ -93,7 +93,7 @@ function NarrativeCard({ item, index }: { item: typeof narrativePoints[0]; index
         ref={ref}
         onMouseEnter={() => { setHovered(true); play("hover") }}
         onMouseLeave={() => setHovered(false)}
-        className="relative clipped-corner p-6 md:p-8 h-full bg-[#050507]/75 backdrop-blur-md border border-white/10 transition-all duration-300 cursor-pointer group hover:translate-x-2 hover:translate-y-2"
+        className="relative p-6 md:p-8 h-full bg-[#050507]/75 backdrop-blur-md border border-white transition-all duration-300 cursor-pointer group hover:translate-x-2 hover:translate-y-2"
         style={{
           boxShadow: hovered ? `0px 0px 0px ${item.color}` : `8px 8px 0px ${item.color}`,
         }}

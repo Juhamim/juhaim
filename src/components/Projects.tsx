@@ -146,7 +146,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
           ref={cardRef}
           onMouseEnter={() => { setHovered(true); play("hover") }}
           onMouseLeave={() => setHovered(false)}
-          className="relative clipped-corner min-h-[440px] flex flex-col cursor-pointer bg-[#050507]/75 backdrop-blur-md border border-white/10 transition-all duration-300 group hover:translate-x-2 hover:translate-y-2"
+          className="relative min-h-[440px] flex flex-col cursor-pointer bg-[#050507]/75 backdrop-blur-md border border-white transition-all duration-300 group hover:translate-x-2 hover:translate-y-2"
           onClick={() => { setIsExpanded(true); play("chime") }}
           style={{
             boxShadow: hovered ? `0px 0px 0px ${project.color}` : `8px 8px 0px ${project.color}`,
@@ -265,8 +265,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="clipped-corner bg-black border p-6 md:p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto relative"
-              style={{ borderColor: project.color }}
+              className="bg-black border border-white p-6 md:p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto relative"
             >
               {/* Radial gradient background behind modal */}
               <div

@@ -77,7 +77,7 @@ function CertificationCard({ cert, index }: { cert: typeof certifications[0]; in
       <div
         onMouseEnter={() => { setHovered(true); play("hover") }}
         onMouseLeave={() => setHovered(false)}
-        className={`relative clipped-corner clipped-border ${cert.borderClass} p-6 h-full flex flex-col gap-5 bg-[#050507]/75 backdrop-blur-md border border-white/5 transition-all duration-300 cursor-pointer hover:translate-x-2 hover:translate-y-2`}
+        className="relative p-6 h-full flex flex-col gap-5 bg-[#050507]/75 backdrop-blur-md border border-white transition-all duration-300 cursor-pointer hover:translate-x-2 hover:translate-y-2"
         style={{
           boxShadow: hovered ? `0px 0px 0px ${cert.color}` : `8px 8px 0px ${cert.color}`,
         }}

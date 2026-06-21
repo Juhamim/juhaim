@@ -90,7 +90,7 @@ export default function Contact() {
             <div
               onMouseEnter={() => { setHovered(true); play("hover") }}
               onMouseLeave={() => setHovered(false)}
-              className="clipped-corner bg-[#050507]/75 backdrop-blur-md border border-white/10 p-8 md:p-10 relative overflow-hidden transition-all duration-300 hover:translate-x-2 hover:translate-y-2"
+              className="bg-[#050507]/75 backdrop-blur-md border border-white p-8 md:p-10 relative overflow-hidden transition-all duration-300 hover:translate-x-2 hover:translate-y-2"
               style={{
                 boxShadow: hovered ? "0px 0px 0px #e60000" : "8px 8px 0px #e60000",
               }}

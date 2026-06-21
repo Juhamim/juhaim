@@ -103,7 +103,7 @@ function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
       viewport={{ once: true }}
       onMouseEnter={() => { setHovered(true); play("hover") }}
       onMouseLeave={() => setHovered(false)}
-      className={`relative clipped-corner clipped-border ${stat.borderClass} p-5 text-center bg-[#050507]/75 backdrop-blur-md border border-white/5 transition-all duration-300 cursor-pointer hover:translate-x-1.5 hover:translate-y-1.5`}
+      className="relative p-5 text-center bg-[#050507]/75 backdrop-blur-md border border-white transition-all duration-300 cursor-pointer hover:translate-x-1.5 hover:translate-y-1.5"
       style={{
         boxShadow: hovered ? `0px 0px 0px ${stat.color}` : `6px 6px 0px ${stat.color}`,
       }}

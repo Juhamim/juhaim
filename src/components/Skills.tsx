@@ -107,7 +107,7 @@ function SkillBadge({ skill, color, delay }: { skill: string; color: string; del
       viewport={{ once: true }}
       onMouseEnter={() => { setHovered(true); play("hover") }}
       onMouseLeave={() => setHovered(false)}
-      className="clipped-corner-sm border px-3.5 py-2 text-xs font-mono font-black uppercase tracking-wider bg-black cursor-default transition-all duration-200"
+      className="border px-3.5 py-2 text-xs font-mono font-black uppercase tracking-wider bg-black cursor-default transition-all duration-200"
       style={{
         color: hovered ? color : "rgba(255,255,255,0.85)",
         borderColor: hovered ? color : "rgba(255,255,255,0.12)",
@@ -131,7 +131,7 @@ function SkillCategoryCard({ cat, catIdx }: { cat: typeof skillCategories[0]; ca
       direction={catIdx % 2 === 0 ? "left" : "right"}
     >
       <div
-        className={`relative clipped-corner clipped-border ${cat.borderClass} p-6 md:p-8 h-full bg-[#050507]/75 backdrop-blur-md border border-white/5 transition-all duration-300 cursor-pointer hover:translate-x-2 hover:translate-y-2`}
+        className="relative p-6 md:p-8 h-full bg-[#050507]/75 backdrop-blur-md border border-white transition-all duration-300 cursor-pointer hover:translate-x-2 hover:translate-y-2"
         onMouseEnter={() => {
           setHovered(true)
           play("hover")
