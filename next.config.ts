@@ -1,7 +1,1 @@
-import type { NextConfig } from "next"
-
-const nextConfig: NextConfig = {}
-
-export default nextConfig
-
-import('@opennextjs/cloudflare').then(m => m.initOpenNextCloudflareForDev());
+import type { NextConfig } from \"next\"\n\nimport('@opennextjs/cloudflare').then(m => m.initOpenNextCloudflareForDev())\n\nconst nextConfig: NextConfig = {\n  reactStrictMode: true,\n  swcMinify: true,\n  compress: true,\n  poweredByHeader: false,\n  productionBrowserSourceMaps: false,\n  experimental: {\n    optimizeCss: true,\n  },\n}\n\nexport default nextConfig\n
