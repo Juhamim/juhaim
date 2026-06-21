@@ -119,9 +119,88 @@ function SkillBadge({ skill, color, delay }: { skill: string; color: string; del
   )
 }
 
-export default function Skills() {
+function SkillCategoryCard({ cat, catIdx }: { cat: typeof skillCategories[0]; catIdx: number }) {
   const { play } = useSound()
+  const [hovered, setHovered] = useState(false)
+  const IconComponent = iconsMap[cat.iconName]
 
+  return (
+    <AnimatedSection
+      key={cat.id}
+      delay={catIdx * 0.08}
+      direction={catIdx % 2 === 0 ? "left" : "right"}
+    >
+      <div
+        className={`relative clipped-corner clipped-border ${cat.borderClass} p-6 md:p-8 h-full bg-[#050507]/75 backdrop-blur-md border border-white/5 transition-all duration-300 cursor-pointer hover:translate-x-2 hover:translate-y-2`}
+        onMouseEnter={() => {
+          setHovered(true)
+          play("hover")
+        }}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          boxShadow: hovered ? `0px 0px 0px ${cat.color}` : `8px 8px 0px ${cat.color}`,
+        }}
+      >
+        {/* Dynamic scanline pattern overlay on hover */}
+        <div className="absolute inset-0 bg-grid-cyber-fine opacity-0 hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
+
+        {/* Cyber corner brackets */}
+        <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cat.color : undefined }} />
+        <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cat.color : undefined }} />
+        <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cat.color : undefined }} />
+        <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cat.color : undefined }} />
+
+        {/* Category Header */}
+        <div className="flex items-center justify-between mb-6 relative z-10">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-10 h-10 border flex items-center justify-center text-white"
+              style={{
+                background: `${cat.color}15`,
+                borderColor: `${cat.color}40`,
+              }}
+            >
+              <IconComponent size={20} style={{ color: cat.color }} />
+            </div>
+            <div>
+              <h3 className="text-sm font-black tracking-wider uppercase text-white font-display">{cat.title}</h3>
+              <span
+                className="text-[9px] font-mono tracking-[0.15em] uppercase font-bold"
+                style={{ color: cat.color }}
+              >
+                {cat.label}
+              </span>
+            </div>
+          </div>
+          <div
+            className="text-[10px] font-mono px-3 py-1 border"
+            style={{
+              background: `${cat.color}08`,
+              color: cat.color,
+              borderColor: `${cat.color}25`,
+            }}
+          >
+            {cat.skills.length} MODULES
+          </div>
+        </div>
+
+        {/* Skill Badges Wrapper */}
+        <div className="flex flex-wrap gap-2.5 relative z-10">
+          {cat.skills.map((skill, skillIdx) => (
+            <SkillBadge
+              key={skill}
+              skill={skill}
+              color={cat.color}
+              delay={catIdx * 0.04 + skillIdx * 0.03}
+            />
+          ))}
+        </div>
+      </div>
+    </AnimatedSection>
+  )
+}
+
+export default function Skills() {
   return (
     <section id="skills" className="relative py-24 md:py-32 overflow-hidden bg-black">
       {/* Background Grid */}
@@ -150,69 +229,9 @@ export default function Skills() {
 
         {/* Skill Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {skillCategories.map((cat, catIdx) => {
-            const IconComponent = iconsMap[cat.iconName]
-            return (
-              <AnimatedSection
-                key={cat.id}
-                delay={catIdx * 0.08}
-                direction={catIdx % 2 === 0 ? "left" : "right"}
-              >
-                <div
-                  className={`clipped-corner clipped-border ${cat.borderClass} ${cat.shadowClass} p-6 md:p-8 h-full bg-[#050507] border border-white/5 transition-all duration-200 cursor-pointer`}
-                  onMouseEnter={() => {
-                    play("hover")
-                  }}
-                >
-                  {/* Category Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-10 h-10 border flex items-center justify-center text-white"
-                        style={{
-                          background: `${cat.color}15`,
-                          borderColor: `${cat.color}40`,
-                        }}
-                      >
-                        <IconComponent size={20} style={{ color: cat.color }} />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-black tracking-wider uppercase text-white font-display">{cat.title}</h3>
-                        <span
-                          className="text-[9px] font-mono tracking-[0.15em] uppercase font-bold"
-                          style={{ color: cat.color }}
-                        >
-                          {cat.label}
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      className="text-[10px] font-mono px-3 py-1 border"
-                      style={{
-                        background: `${cat.color}08`,
-                        color: cat.color,
-                        borderColor: `${cat.color}25`,
-                      }}
-                    >
-                      {cat.skills.length} MODULES
-                    </div>
-                  </div>
-
-                  {/* Skill Badges Wrapper */}
-                  <div className="flex flex-wrap gap-2.5">
-                    {cat.skills.map((skill, skillIdx) => (
-                      <SkillBadge
-                        key={skill}
-                        skill={skill}
-                        color={cat.color}
-                        delay={catIdx * 0.04 + skillIdx * 0.03}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </AnimatedSection>
-            )
-          })}
+          {skillCategories.map((cat, catIdx) => (
+            <SkillCategoryCard key={cat.id} cat={cat} catIdx={catIdx} />
+          ))}
         </div>
       </div>
     </section>

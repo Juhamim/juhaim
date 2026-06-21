@@ -21,8 +21,6 @@ const projects = [
     color: "#e60000",
     pattern: "cyber",
     icon: Shield,
-    borderClass: "clipped-border-red",
-    shadowClass: "shadow-brutalist-red hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
   },
   {
     id: "hermindmate",
@@ -38,8 +36,6 @@ const projects = [
     color: "#00f3ff",
     pattern: "health",
     icon: Users,
-    borderClass: "clipped-border-cyan",
-    shadowClass: "shadow-brutalist-cyan hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
   },
   {
     id: "soc-bot",
@@ -55,8 +51,6 @@ const projects = [
     color: "#ff00ff",
     pattern: "terminal",
     icon: Zap,
-    borderClass: "clipped-border-magenta",
-    shadowClass: "shadow-brutalist-magenta hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
   },
   {
     id: "cloud-print",
@@ -72,8 +66,6 @@ const projects = [
     color: "#ffffff",
     pattern: "cloud",
     icon: GitBranch,
-    borderClass: "clipped-border",
-    shadowClass: "shadow-brutalist-white hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
   },
 ]
 
@@ -126,18 +118,19 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
   const cardRef = useRef<HTMLDivElement>(null)
   const { play } = useSound()
   const [isExpanded, setIsExpanded] = useState(false)
+  const [hovered, setHovered] = useState(false)
 
   useEffect(() => {
     const el = cardRef.current
     if (!el) return
     const onMove = (e: MouseEvent) => {
       const rect = el.getBoundingClientRect()
-      const rx = ((e.clientY - rect.top - rect.height / 2) / rect.height) * -5
-      const ry = ((e.clientX - rect.left - rect.width / 2) / rect.width) * 5
-      el.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.01)`
+      const rx = ((e.clientY - rect.top - rect.height / 2) / rect.height) * -4
+      const ry = ((e.clientX - rect.left - rect.width / 2) / rect.width) * 4
+      el.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg)`
     }
     const onLeave = () => {
-      el.style.transform = "perspective(1200px) rotateX(0) rotateY(0) scale(1)"
+      el.style.transform = "perspective(1200px) rotateX(0) rotateY(0)"
     }
     el.addEventListener("mousemove", onMove)
     el.addEventListener("mouseleave", onLeave)
@@ -151,9 +144,13 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
       <AnimatedSection delay={index * 0.1}>
         <div
           ref={cardRef}
-          className={`clipped-corner clipped-border ${project.borderClass} ${project.shadowClass} min-h-[440px] flex flex-col cursor-pointer bg-[#050507] border border-white/5 transition-all duration-200 group`}
+          onMouseEnter={() => { setHovered(true); play("hover") }}
+          onMouseLeave={() => setHovered(false)}
+          className="relative clipped-corner min-h-[440px] flex flex-col cursor-pointer bg-[#050507]/75 backdrop-blur-md border border-white/10 transition-all duration-300 group hover:translate-x-2 hover:translate-y-2"
           onClick={() => { setIsExpanded(true); play("chime") }}
-          onMouseEnter={() => play("hover")}
+          style={{
+            boxShadow: hovered ? `0px 0px 0px ${project.color}` : `8px 8px 0px ${project.color}`,
+          }}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => e.key === "Enter" && setIsExpanded(true)}
@@ -161,24 +158,33 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
         >
           <ProjectPattern pattern={project.pattern} color={project.color} />
 
+          {/* Cyber corner brackets */}
+          <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? project.color : undefined }} />
+          <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? project.color : undefined }} />
+          <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? project.color : undefined }} />
+          <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? project.color : undefined }} />
+
+          {/* Dynamic grid texture overlay on hover */}
+          <div className="absolute inset-0 bg-grid-cyber-fine opacity-0 group-hover:opacity-15 transition-opacity duration-300 pointer-events-none" />
+
           <div className="relative z-10 p-6 md:p-8 flex flex-col h-full flex-1">
             {/* Top: icon + tag */}
             <div className="flex items-center justify-between mb-6">
               <div
-                className="w-10 h-10 border flex items-center justify-center text-white"
+                className="w-10 h-10 border flex items-center justify-center text-white transition-colors duration-300"
                 style={{
-                  background: `${project.color}15`,
-                  borderColor: `${project.color}40`,
+                  background: hovered ? `${project.color}18` : `${project.color}0c`,
+                  borderColor: hovered ? project.color : `${project.color}35`,
                 }}
               >
                 <Icon size={20} style={{ color: project.color }} />
               </div>
               <div
-                className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 border font-bold"
+                className="text-[9px] font-mono tracking-widest uppercase px-3 py-1 border font-bold transition-colors duration-300"
                 style={{
-                  background: `${project.color}08`,
+                  background: `${project.color}05`,
                   color: project.color,
-                  borderColor: `${project.color}20`,
+                  borderColor: hovered ? project.color : `${project.color}20`,
                 }}
               >
                 {project.tech[0]}
@@ -187,8 +193,8 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
 
             {/* Title */}
             <h3
-              className="text-lg md:text-xl font-black text-white mb-2 font-display tracking-wider"
-              style={{ textShadow: `0 0 15px ${project.color}25` }}
+              className="text-lg md:text-xl font-black text-white mb-2 font-display tracking-wider transition-all duration-300"
+              style={{ textShadow: hovered ? `0 0 20px ${project.color}35` : `0 0 10px ${project.color}15` }}
             >
               {project.title}
             </h3>

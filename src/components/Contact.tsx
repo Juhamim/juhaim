@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { Mail, Phone, MapPin, Linkedin, Github } from "lucide-react"
 import AnimatedSection from "./AnimatedSection"
@@ -50,6 +51,7 @@ const contacts = [
 
 export default function Contact() {
   const { play } = useSound()
+  const [hovered, setHovered] = useState(false)
 
   return (
     <section id="contact" className="relative py-24 md:py-32 overflow-hidden bg-black">
@@ -85,8 +87,20 @@ export default function Contact() {
         <div className="max-w-2xl mx-auto">
           {/* Main contact card */}
           <AnimatedSection delay={0.1}>
-            <div className="clipped-corner bg-[#050507] border border-white/10 p-8 md:p-10 relative overflow-hidden shadow-[4px_4px_0px_#e60000]">
-              
+            <div
+              onMouseEnter={() => { setHovered(true); play("hover") }}
+              onMouseLeave={() => setHovered(false)}
+              className="clipped-corner bg-[#050507]/75 backdrop-blur-md border border-white/10 p-8 md:p-10 relative overflow-hidden transition-all duration-300 hover:translate-x-2 hover:translate-y-2"
+              style={{
+                boxShadow: hovered ? "0px 0px 0px #e60000" : "8px 8px 0px #e60000",
+              }}
+            >
+              {/* Cyber corner brackets */}
+              <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? "#e60000" : undefined }} />
+              <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? "#e60000" : undefined }} />
+              <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? "#e60000" : undefined }} />
+              <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? "#e60000" : undefined }} />
+
               {/* Decorative radial overlay */}
               <div
                 className="absolute inset-0 pointer-events-none opacity-20"

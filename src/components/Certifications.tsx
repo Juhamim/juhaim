@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
 import AnimatedSection from "./AnimatedSection"
 import { useSound } from "@/lib/sounds"
@@ -66,9 +67,74 @@ const certifications = [
   },
 ]
 
-export default function Certifications() {
+function CertificationCard({ cert, index }: { cert: typeof certifications[0]; index: number }) {
   const { play } = useSound()
+  const [hovered, setHovered] = useState(false)
+  const IconComponent = iconsMap[cert.iconName]
 
+  return (
+    <AnimatedSection delay={index * 0.08}>
+      <div
+        onMouseEnter={() => { setHovered(true); play("hover") }}
+        onMouseLeave={() => setHovered(false)}
+        className={`relative clipped-corner clipped-border ${cert.borderClass} p-6 h-full flex flex-col gap-5 bg-[#050507]/75 backdrop-blur-md border border-white/5 transition-all duration-300 cursor-pointer hover:translate-x-2 hover:translate-y-2`}
+        style={{
+          boxShadow: hovered ? `0px 0px 0px ${cert.color}` : `8px 8px 0px ${cert.color}`,
+        }}
+      >
+        {/* Cyber corner brackets */}
+        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cert.color : undefined }} />
+        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cert.color : undefined }} />
+        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cert.color : undefined }} />
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cert.color : undefined }} />
+
+        {/* Icon & badge */}
+        <div className="flex items-center justify-between relative z-10">
+          <div
+            className="w-10 h-10 border flex items-center justify-center text-white"
+            style={{
+              background: `${cert.color}15`,
+              borderColor: `${cert.color}40`,
+            }}
+          >
+            <IconComponent size={18} style={{ color: cert.color }} />
+          </div>
+          <div className="flex items-center gap-2">
+            <span
+              className="text-[9px] font-mono tracking-widest uppercase px-2.5 py-1 border font-bold"
+              style={{
+                background: `${cert.color}08`,
+                color: cert.color,
+                borderColor: `${cert.color}20`,
+              }}
+            >
+              {cert.category}
+            </span>
+            <span className="text-[10px] text-text-secondary font-mono font-bold">{cert.year}</span>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 relative z-10">
+          <h3 className="text-sm font-black text-white mb-2 leading-tight font-display tracking-wide">
+            {cert.title}
+          </h3>
+          <p className="text-xs text-text-secondary leading-relaxed font-sans">{cert.desc}</p>
+        </div>
+
+        {/* Verification telemetry */}
+        <div className="flex items-center gap-2 border-t border-white/5 pt-3 relative z-10">
+          <span className="w-2 h-2 bg-brand-red glow-red animate-pulse" />
+          <span className="text-[9px] font-mono text-brand-red/80 uppercase tracking-widest font-black">
+            SYSTEM_VERIFIED // SECURE_
+          </span>
+        </div>
+      </div>
+    </AnimatedSection>
+  )
+}
+
+export default function Certifications() {
   return (
     <section id="certifications" className="relative py-24 md:py-32 overflow-hidden bg-black">
       <div className="absolute inset-0 bg-grid-cyber-fine opacity-15" aria-hidden="true" />
@@ -96,59 +162,9 @@ export default function Certifications() {
 
         {/* Grid layout for brutalist cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {certifications.map((cert, i) => {
-            const IconComponent = iconsMap[cert.iconName]
-            return (
-              <AnimatedSection key={cert.title} delay={i * 0.08}>
-                <motion.div
-                  onMouseEnter={() => play("hover")}
-                  className={`clipped-corner clipped-border ${cert.borderClass} ${cert.shadowClass} p-6 h-full flex flex-col gap-5 bg-[#050507] border border-white/5 transition-all duration-200 cursor-pointer`}
-                >
-                  {/* Icon & badge */}
-                  <div className="flex items-center justify-between">
-                    <div
-                      className="w-10 h-10 border flex items-center justify-center text-white"
-                      style={{
-                        background: `${cert.color}15`,
-                        borderColor: `${cert.color}40`,
-                      }}
-                    >
-                      <IconComponent size={18} style={{ color: cert.color }} />
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="text-[9px] font-mono tracking-widest uppercase px-2.5 py-1 border font-bold"
-                        style={{
-                          background: `${cert.color}08`,
-                          color: cert.color,
-                          borderColor: `${cert.color}20`,
-                        }}
-                      >
-                        {cert.category}
-                      </span>
-                      <span className="text-[10px] text-text-secondary font-mono font-bold">{cert.year}</span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1">
-                    <h3 className="text-sm font-black text-white mb-2 leading-tight font-display tracking-wide">
-                      {cert.title}
-                    </h3>
-                    <p className="text-xs text-text-secondary leading-relaxed font-sans">{cert.desc}</p>
-                  </div>
-
-                  {/* Verification telemetry */}
-                  <div className="flex items-center gap-2 border-t border-white/5 pt-3">
-                    <span className="w-2 h-2 bg-brand-red glow-red animate-pulse" />
-                    <span className="text-[9px] font-mono text-brand-red/80 uppercase tracking-widest font-black">
-                      SYSTEM_VERIFIED // SECURE_
-                    </span>
-                  </div>
-                </motion.div>
-              </AnimatedSection>
-            )
-          })}
+          {certifications.map((cert, i) => (
+            <CertificationCard key={cert.title} cert={cert} index={i} />
+          ))}
         </div>
       </div>
     </section>

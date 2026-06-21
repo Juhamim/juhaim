@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import AnimatedSection from "./AnimatedSection"
 import { useSound } from "@/lib/sounds"
@@ -13,7 +13,7 @@ const iconsMap = {
   Cloud: Cloud,
 }
 
-function use3DTilt(strength = 8) {
+function use3DTilt(strength = 6) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = ref.current
@@ -22,10 +22,10 @@ function use3DTilt(strength = 8) {
       const rect = el.getBoundingClientRect()
       const rx = ((e.clientY - rect.top - rect.height / 2) / rect.height) * -strength
       const ry = ((e.clientX - rect.left - rect.width / 2) / rect.width) * strength
-      el.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`
+      el.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg)`
     }
     const onLeave = () => {
-      el.style.transform = "perspective(1000px) rotateX(0) rotateY(0) scale(1)"
+      el.style.transform = "perspective(1000px) rotateX(0) rotateY(0)"
     }
     el.addEventListener("mousemove", onMove)
     el.addEventListener("mouseleave", onLeave)
@@ -44,8 +44,6 @@ const narrativePoints = [
     statLabel: "False positive reduction",
     desc: "Built ML pipelines that learn attacker patterns. My ThreatHunter AI platform slashed false positives by 60% through log correlation and behavioral analytics.",
     color: "#e60000",
-    shadowClass: "shadow-brutalist-red hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
-    borderClass: "clipped-border-red",
   },
   {
     iconName: "Rocket" as const,
@@ -56,8 +54,6 @@ const narrativePoints = [
     statLabel: "Monthly active users",
     desc: "Architected HerMindMate to serve 10,000+ monthly users with 99.5% uptime. Optimized load time by 40% using Next.js SSR and edge caching strategies.",
     color: "#00f3ff",
-    shadowClass: "shadow-brutalist-cyan hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
-    borderClass: "clipped-border-cyan",
   },
   {
     iconName: "Zap" as const,
@@ -68,8 +64,6 @@ const narrativePoints = [
     statLabel: "Faster incident response",
     desc: "Engineered Python automation frameworks that eliminate SOC fatigue. Intelligent alert triage and enrichment workflows free analysts for threat hunting.",
     color: "#ff00ff",
-    shadowClass: "shadow-brutalist-magenta hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
-    borderClass: "clipped-border-magenta",
   },
   {
     iconName: "Cloud" as const,
@@ -80,40 +74,59 @@ const narrativePoints = [
     statLabel: "Production applications",
     desc: "Designing secure-by-default cloud systems using AWS, Supabase, and Cloudflare. Every architectural decision starts with a threat model.",
     color: "#ffffff",
-    shadowClass: "shadow-brutalist-white hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
-    borderClass: "clipped-border",
   },
 ]
 
 function NarrativeCard({ item, index }: { item: typeof narrativePoints[0]; index: number }) {
-  const ref = use3DTilt(6)
+  const ref = use3DTilt(5)
   const { play } = useSound()
+  const [hovered, setHovered] = useState(false)
   const isEven = index % 2 === 0
   const IconComponent = iconsMap[item.iconName]
 
   return (
     <AnimatedSection
-      delay={index * 0.1}
+      delay={index * 0.08}
       direction={isEven ? "left" : "right"}
     >
       <div
         ref={ref}
-        className={`clipped-corner clipped-border ${item.borderClass} ${item.shadowClass} p-6 md:p-8 h-full bg-[#050507] border border-white/5 transition-all duration-200 cursor-pointer`}
-        onMouseEnter={() => play("hover")}
+        onMouseEnter={() => { setHovered(true); play("hover") }}
+        onMouseLeave={() => setHovered(false)}
+        className="relative clipped-corner p-6 md:p-8 h-full bg-[#050507]/75 backdrop-blur-md border border-white/10 transition-all duration-300 cursor-pointer group hover:translate-x-2 hover:translate-y-2"
+        style={{
+          boxShadow: hovered ? `0px 0px 0px ${item.color}` : `8px 8px 0px ${item.color}`,
+        }}
       >
+        {/* Dynamic scanline pattern overlay on hover */}
+        <div className="absolute inset-0 bg-grid-cyber-fine opacity-0 group-hover:opacity-15 transition-opacity duration-300 pointer-events-none" />
+
+        {/* Cyber corner brackets */}
+        <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? item.color : undefined }} />
+        <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? item.color : undefined }} />
+        <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? item.color : undefined }} />
+        <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? item.color : undefined }} />
+
         {/* Top row */}
-        <div className="flex items-start justify-between mb-6">
+        <div className="flex items-start justify-between mb-6 relative z-10">
           <div className="flex items-center gap-3">
             <div
-              className="w-10 h-10 border border-white/10 flex items-center justify-center text-white"
-              style={{ background: `${item.color}15`, borderColor: `${item.color}40` }}
+              className="w-10 h-10 border flex items-center justify-center text-white transition-colors duration-300"
+              style={{ 
+                background: hovered ? `${item.color}18` : `${item.color}0c`, 
+                borderColor: hovered ? item.color : `${item.color}35` 
+              }}
             >
               <IconComponent size={20} style={{ color: item.color }} />
             </div>
             <div>
               <span
-                className="text-[9px] font-mono tracking-widest uppercase px-2.5 py-1 border font-bold"
-                style={{ background: `${item.color}08`, color: item.color, borderColor: `${item.color}30` }}
+                className="text-[9px] font-mono tracking-widest uppercase px-2.5 py-1 border font-bold transition-colors duration-300"
+                style={{ 
+                  background: `${item.color}05`, 
+                  color: item.color, 
+                  borderColor: hovered ? item.color : `${item.color}25` 
+                }}
               >
                 {item.tag}
               </span>
@@ -121,20 +134,31 @@ function NarrativeCard({ item, index }: { item: typeof narrativePoints[0]; index
           </div>
           {/* Stat */}
           <div className="text-right">
-            <div className="text-3xl font-black font-display tracking-tight" style={{ color: item.color }}>{item.stat}</div>
+            <div 
+              className="text-3xl font-black font-display tracking-tight transition-all duration-300" 
+              style={{ 
+                color: item.color,
+                textShadow: hovered ? `0 0 15px ${item.color}45` : "none"
+              }}
+            >
+              {item.stat}
+            </div>
             <div className="text-[9px] text-text-secondary font-mono tracking-wider uppercase">{item.statLabel}</div>
           </div>
         </div>
 
-        <h3 className="text-base md:text-lg font-black text-white mb-3 tracking-wider font-display">
+        <h3 className="text-base md:text-lg font-black text-white mb-3 tracking-wider font-display relative z-10">
           {item.headline}
         </h3>
-        <p className="text-xs md:text-sm text-text-secondary leading-relaxed font-sans">{item.desc}</p>
+        <p className="text-xs md:text-sm text-text-secondary leading-relaxed font-sans relative z-10">{item.desc}</p>
 
         {/* Bottom decorative bar */}
         <div
-          className="mt-6 h-0.5 w-12"
-          style={{ background: `linear-gradient(90deg, ${item.color}, transparent)` }}
+          className="mt-6 h-0.5 w-12 transition-all duration-300"
+          style={{ 
+            background: `linear-gradient(90deg, ${item.color}, transparent)`,
+            width: hovered ? "70px" : "48px"
+          }}
         />
       </div>
     </AnimatedSection>
@@ -142,7 +166,6 @@ function NarrativeCard({ item, index }: { item: typeof narrativePoints[0]; index
 }
 
 export default function About() {
-  const { play } = useSound()
   return (
     <section id="about" className="relative py-24 md:py-32 overflow-hidden bg-black">
       {/* Background effects */}
@@ -183,7 +206,7 @@ export default function About() {
         </div>
 
         {/* Quote */}
-        <AnimatedSection delay={0.4} className="mt-20 text-center">
+        <AnimatedSection delay={0.3} className="mt-20 text-center">
           <div className="inline-block px-8 py-5 border border-white/10 bg-white/[0.02] max-w-2xl mx-auto shadow-[3px_3px_0px_rgba(255,255,255,0.05)]">
             <p className="text-xs md:text-sm text-text-secondary italic leading-relaxed font-mono">
               "SECURITY IS NOT A PRODUCT, BUT A PROCESS — AND I BUILD BOTH."

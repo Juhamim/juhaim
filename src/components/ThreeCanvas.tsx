@@ -237,7 +237,7 @@ export default function ThreeCanvas() {
     // Main render loop
     const draw = () => {
       // Lerp smooth scroll for elegant scrolling inertia
-      smoothScrollY += (scrollYVal - smoothScrollY) * 0.08
+      smoothScrollY += (scrollYVal - smoothScrollY) * 0.06
       scrollSpeed = smoothScrollY - lastScrollY
       lastScrollY = smoothScrollY
 

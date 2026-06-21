@@ -84,6 +84,7 @@ function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
   const isInView = useInView(ref, { once: true, amount: 0.3 })
   const { play } = useSound()
   const [started, setStarted] = useState(false)
+  const [hovered, setHovered] = useState(false)
   const IconComponent = iconsMap[stat.iconName]
 
   useEffect(() => {
@@ -100,25 +101,37 @@ function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: index * 0.08, duration: 0.6, type: "spring", stiffness: 150, damping: 15 }}
       viewport={{ once: true }}
-      onMouseEnter={() => play("hover")}
-      className={`clipped-corner clipped-border ${stat.borderClass} ${stat.shadowClass} p-5 text-center relative bg-[#050507] border border-white/5 transition-all duration-200 cursor-pointer`}
+      onMouseEnter={() => { setHovered(true); play("hover") }}
+      onMouseLeave={() => setHovered(false)}
+      className={`relative clipped-corner clipped-border ${stat.borderClass} p-5 text-center bg-[#050507]/75 backdrop-blur-md border border-white/5 transition-all duration-300 cursor-pointer hover:translate-x-1.5 hover:translate-y-1.5`}
+      style={{
+        boxShadow: hovered ? `0px 0px 0px ${stat.color}` : `6px 6px 0px ${stat.color}`,
+      }}
     >
+      {/* Cyber corner brackets */}
+      <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? stat.color : undefined }} />
+      <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? stat.color : undefined }} />
+      <div className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? stat.color : undefined }} />
+      <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? stat.color : undefined }} />
+
       {/* Icon */}
-      <div className="flex justify-center mb-4 text-white">
+      <div className="flex justify-center mb-4 text-white relative z-10">
         <IconComponent size={20} style={{ color: stat.color }} />
       </div>
 
       {/* Counter */}
-      <AnimatedCounter
-        value={stat.value}
-        suffix={stat.suffix}
-        decimals={stat.decimals}
-        color={stat.color}
-        isRunning={started}
-      />
+      <div className="relative z-10">
+        <AnimatedCounter
+          value={stat.value}
+          suffix={stat.suffix}
+          decimals={stat.decimals}
+          color={stat.color}
+          isRunning={started}
+        />
+      </div>
 
       {/* Label */}
-      <div className="mt-4">
+      <div className="mt-4 relative z-10">
         <p className="text-xs font-black tracking-wide uppercase text-white font-display">{stat.label}</p>
         <p className="text-[10px] text-text-secondary font-mono tracking-wider uppercase mt-1">{stat.desc}</p>
       </div>

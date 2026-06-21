@@ -8,6 +8,7 @@ import Certifications from "@/components/Certifications"
 import Contact from "@/components/Contact"
 import Footer from "@/components/Footer"
 import ThreeCanvas from "@/components/ThreeCanvas"
+import SmoothScroll from "@/components/SmoothScroll"
 
 export default function Home() {
   return (
@@ -17,6 +18,9 @@ export default function Home() {
 
       {/* Persistent 3D Canvas background */}
       <ThreeCanvas />
+
+      {/* Smooth scroll configuration */}
+      <SmoothScroll />
 
       {/* Page content */}
       <div className="relative" style={{ zIndex: 2 }}>
