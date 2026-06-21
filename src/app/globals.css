@@ -487,6 +487,15 @@
   html { font-size: 15px; }
 }
 
+@media (max-width: 640px) {
+  .spider-hero-text::before {
+    left: -18px;
+  }
+  .spider-hero-text::after {
+    right: -18px;
+  }
+}
+
 /* ─── REDUCED MOTION ────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
