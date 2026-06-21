@@ -20,6 +20,230 @@ const roleIcons = [
   { Icon: Cpu, label: "AI" },
 ]
 
+// 3D Rotating Canvas Threat Globe & Network Map
+function CyberGlobe({ logs }: { logs: string[] }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+
+    let animationId: number
+    let width = canvas.width = canvas.offsetWidth || 300
+    let height = canvas.height = canvas.offsetHeight || 210
+
+    // Fibonacci sphere distribution
+    const numPoints = 80
+    const points: { x: number; y: number; z: number }[] = []
+    for (let i = 0; i < numPoints; i++) {
+      const theta = Math.acos(1 - 2 * (i + 0.5) / numPoints)
+      const phi = Math.sqrt(numPoints * Math.PI) * theta
+      points.push({
+        x: Math.sin(theta) * Math.cos(phi) * 65,
+        y: Math.sin(theta) * Math.sin(phi) * 65,
+        z: Math.cos(theta) * 65,
+      })
+    }
+
+    // Active connection arcs
+    interface Arc {
+      startIdx: number
+      endIdx: number
+      progress: number
+      speed: number
+    }
+    const arcs: Arc[] = []
+    for (let i = 0; i < 4; i++) {
+      arcs.push({
+        startIdx: Math.floor(Math.random() * numPoints),
+        endIdx: Math.floor(Math.random() * numPoints),
+        progress: Math.random(),
+        speed: 0.008 + Math.random() * 0.012,
+      })
+    }
+
+    let angleY = 0
+    let angleX = 0.3
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        width = canvas.width = entry.contentRect.width || 300
+        height = canvas.height = entry.contentRect.height || 210
+      }
+    })
+    resizeObserver.observe(canvas)
+
+    const render = () => {
+      // Semi-transparent background for long neon trails
+      ctx.fillStyle = "rgba(0, 0, 0, 0.18)"
+      ctx.fillRect(0, 0, width, height)
+
+      // Faint background radar ring
+      ctx.strokeStyle = "rgba(0, 243, 255, 0.04)"
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.arc(width / 2, height / 2, 90, 0, Math.PI * 2)
+      ctx.stroke()
+
+      ctx.beginPath()
+      ctx.arc(width / 2, height / 2, 45, 0, Math.PI * 2)
+      ctx.stroke()
+
+      angleY += 0.006
+      angleX = 0.2 + Math.sin(angleY * 0.5) * 0.1
+
+      const fov = 150
+      const cx = width / 2
+      const cy = height / 2
+
+      // Project points to 2D
+      const projected = points.map((p) => {
+        // Y-axis rotation
+        const x1 = p.x * Math.cos(angleY) - p.z * Math.sin(angleY)
+        const z1 = p.x * Math.sin(angleY) + p.z * Math.cos(angleY)
+        
+        // X-axis rotation
+        const y2 = p.y * Math.cos(angleX) - z1 * Math.sin(angleX)
+        const z2 = p.y * Math.sin(angleX) + z1 * Math.cos(angleX)
+
+        const scale = fov / (fov + z2 + 80)
+        return {
+          x: cx + x1 * scale * 1.5,
+          y: cy + y2 * scale * 1.5,
+          z: z2,
+        }
+      })
+
+      // Draw cyber mesh lines (connect nearby points)
+      ctx.lineWidth = 0.5
+      for (let i = 0; i < numPoints; i++) {
+        const p1 = projected[i]
+        for (let j = i + 1; j < numPoints; j++) {
+          const p2 = projected[j]
+          
+          // Compute 3D distance
+          const dx = points[i].x - points[j].x
+          const dy = points[i].y - points[j].y
+          const dz = points[i].z - points[j].z
+          const distSq = dx*dx + dy*dy + dz*dz
+          
+          if (distSq < 1300) { // connect close points
+            const depthAlpha = Math.max(0.02, (65 - (p1.z + p2.z) / 2) / 130)
+            ctx.strokeStyle = `rgba(0, 243, 255, ${depthAlpha * 0.45})`
+            ctx.beginPath()
+            ctx.moveTo(p1.x, p1.y)
+            ctx.lineTo(p2.x, p2.y)
+            ctx.stroke()
+          }
+        }
+      }
+
+      // Draw attack paths (bezier arcs) and packet signals
+      arcs.forEach((arc) => {
+        const pStart = projected[arc.startIdx]
+        const pEnd = projected[arc.endIdx]
+
+        // Control point for arc height
+        const midX = (pStart.x + pEnd.x) / 2
+        const midY = (pStart.y + pEnd.y) / 2 - 35
+        
+        // Draw the trace arc path
+        ctx.strokeStyle = "rgba(255, 0, 255, 0.08)"
+        ctx.lineWidth = 0.8
+        ctx.beginPath()
+        ctx.moveTo(pStart.x, pStart.y)
+        ctx.quadraticCurveTo(midX, midY, pEnd.x, pEnd.y)
+        ctx.stroke()
+
+        // Draw the glowing signal particle
+        const t = arc.progress
+        const mt = 1 - t
+        // Quadratic bezier interpolation: (1-t)^2 * p0 + 2*(1-t)*t * p1 + t^2 * p2
+        const px = mt * mt * pStart.x + 2 * mt * t * midX + t * t * pEnd.x
+        const py = mt * mt * pStart.y + 2 * mt * t * midY + t * t * pEnd.y
+        
+        const isFront = (pStart.z + pEnd.z) / 2 < 10
+        ctx.fillStyle = isFront ? "#ff00ff" : "rgba(255, 0, 255, 0.4)"
+        ctx.beginPath()
+        ctx.arc(px, py, isFront ? 2.5 : 1.5, 0, Math.PI * 2)
+        ctx.fill()
+
+        // Update arc progress
+        arc.progress += arc.speed
+        if (arc.progress >= 1) {
+          arc.startIdx = Math.floor(Math.random() * numPoints)
+          arc.endIdx = Math.floor(Math.random() * numPoints)
+          arc.progress = 0
+          arc.speed = 0.008 + Math.random() * 0.012
+        }
+      })
+
+      // Draw rotating sphere nodes
+      projected.forEach((p) => {
+        // Dim points in background, highlight points in front
+        const alpha = Math.max(0.1, (65 - p.z) / 130)
+        ctx.fillStyle = p.z < 0 ? `rgba(0, 243, 255, ${alpha})` : `rgba(230, 0, 0, ${alpha * 0.7})`
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.z < 0 ? 1.8 : 1, 0, Math.PI * 2)
+        ctx.fill()
+      })
+
+      animationId = requestAnimationFrame(render)
+    }
+
+    render()
+
+    return () => {
+      cancelAnimationFrame(animationId)
+      resizeObserver.disconnect()
+    }
+  }, [])
+
+  return (
+    <div className="relative w-full h-[210px] overflow-hidden bg-black/95 border border-white/10 flex items-center justify-center">
+      <canvas ref={canvasRef} className="w-full h-full block" />
+      
+      {/* Real-time floating log HUD overlays (auto-scrolling feed) */}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-3 pt-6 flex flex-col h-[75px] justify-end pointer-events-none">
+        <div className="font-mono text-[8px] uppercase tracking-widest text-[#00f3ff]/40 mb-1 font-bold">
+          [// THREAT_FEED_SCANNER]
+        </div>
+        <div className="overflow-hidden h-[36px] flex flex-col justify-end text-[8.5px] font-mono leading-tight space-y-0.5">
+          {logs.slice(-3).map((log, idx) => {
+            let color = "text-[#00ff66]" // default cyber green
+            if (log.includes("ALERT") || log.includes("IDS:") || log.includes("intrusion") || log.includes("Blocked")) {
+              color = "text-[#ff0055]"
+            } else if (log.includes("PLAYBOOK:")) {
+              color = "text-[#ff00ff]"
+            } else if (log.includes("FIREWALL:")) {
+              color = "text-[#ff9900]"
+            } else if (log.includes("AUDIT:")) {
+              color = "text-[#00f3ff]"
+            } else if (log.includes("SYSTEM:")) {
+              color = "text-[#94a3b8]"
+            }
+            // Strip timestamp from log display in overlays to fit width
+            const cleanLog = log.replace(/^\[\d+:\d+:\d+ [AP]M\]\s*/i, "").replace(/^\[\d+:\d+:\d+\]\s*/i, "")
+            return (
+              <div key={idx} className={`${color} truncate opacity-90`}>
+                &gt; {cleanLog}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Cyber radar scan overlay line */}
+      <div className="absolute top-2 left-2 flex items-center gap-1.5 pointer-events-none">
+        <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
+        <span className="text-[7.5px] font-mono font-bold tracking-widest text-red-500 uppercase">SYS_GRID // ONLINE</span>
+      </div>
+    </div>
+  )
+}
+
 export default function Hero() {
   const heroRef = useRef<HTMLElement>(null)
 
@@ -317,38 +541,8 @@ export default function Hero() {
                     transition={{ duration: 0.3 }}
                     className="flex flex-col space-y-4"
                   >
-                    {/* Live Terminal Box */}
-                    <div className="bg-black/90 border border-white/10 p-4 font-mono text-[10px] leading-relaxed h-52 overflow-y-auto relative">
-                      <div className="absolute top-2 right-3 flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                        <span className="text-[8px] text-red-500 uppercase font-black">Live Feed</span>
-                      </div>
-                      
-                      <div className="space-y-1.5 pr-8">
-                        {logs.map((log, index) => {
-                          let colorClass = "text-[#00ff66]" // default cyber green
-                          if (log.includes("ALERT") || log.includes("IDS:") || log.includes("intrusion") || log.includes("Blocked")) {
-                            colorClass = "text-[#ff0055]"
-                          } else if (log.includes("PLAYBOOK:")) {
-                            colorClass = "text-[#ff00ff]"
-                          } else if (log.includes("FIREWALL:")) {
-                            colorClass = "text-[#ff9900]"
-                          } else if (log.includes("AUDIT:")) {
-                            colorClass = "text-[#00f3ff]"
-                          } else if (log.includes("SYSTEM:")) {
-                            colorClass = "text-[#94a3b8]"
-                          } else if (log.includes(">")) {
-                            colorClass = "text-white font-bold"
-                          }
-                          return (
-                            <div key={index} className={colorClass}>
-                              {log}
-                            </div>
-                          )
-                        })}
-                        <div ref={consoleEndRef} />
-                      </div>
-                    </div>
+                    {/* Live 3D Radar Threat Globe */}
+                    <CyberGlobe logs={logs} />
 
                     {/* Manual Threat Playbooks */}
                     <div>
