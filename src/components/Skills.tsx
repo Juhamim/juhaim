@@ -1,230 +1,135 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
-import { motion } from "framer-motion"
 import AnimatedSection from "./AnimatedSection"
-import { useSound } from "@/lib/sounds"
-import { Shield, Terminal, Server, Network } from "lucide-react"
-
-const iconsMap = {
-  Shield: Shield,
-  Terminal: Terminal,
-  Server: Server,
-  Network: Network,
-}
-
-function use3DTiltBadge() {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect()
-      const rx = ((e.clientY - rect.top - rect.height / 2) / rect.height) * -12
-      const ry = ((e.clientX - rect.left - rect.width / 2) / rect.width) * 12
-      el.style.transform = `perspective(600px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.08)`
-    }
-    const onLeave = () => {
-      el.style.transform = "perspective(600px) rotateX(0) rotateY(0) scale(1)"
-    }
-    el.addEventListener("mousemove", onMove)
-    el.addEventListener("mouseleave", onLeave)
-    return () => {
-      el.removeEventListener("mousemove", onMove)
-      el.removeEventListener("mouseleave", onLeave)
-    }
-  }, [])
-  return ref
-}
+import { Shield, Code, Server, Network, Brain } from "lucide-react"
 
 const skillCategories = [
   {
     id: "cyber",
     title: "Cybersecurity",
-    label: "CRITICAL // CORE",
-    iconName: "Shield" as const,
+    label: "Offensive & Defensive",
+    icon: Shield,
     color: "#e60000",
-    shadowClass: "shadow-brutalist-red hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
-    borderClass: "clipped-border-red",
     skills: [
       "Threat Detection", "Vulnerability Assessment", "Penetration Testing",
-      "Incident Response", "SOC Concepts", "Log Analysis",
-      "Digital Forensics", "Cryptography", "Security Auditing",
+      "Incident Response", "SOC Operations", "Log Analysis",
+      "Cryptography", "Wireshark & Nmap", "DevSecOps"
     ],
   },
   {
-    id: "dev",
-    title: "Development",
-    label: "FULL-STACK // SYSTEMS",
-    iconName: "Terminal" as const,
-    color: "#ff00ff",
-    shadowClass: "shadow-brutalist-magenta hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
-    borderClass: "clipped-border-magenta",
+    id: "frontend",
+    title: "Frontend Development",
+    label: "Modern SaaS Interfaces",
+    icon: Code,
+    color: "#00f3ff",
     skills: [
-      "React.js", "Next.js", "JavaScript", "Python",
-      "PostgreSQL", "REST APIs", "Full-Stack Development",
+      "React.js", "Next.js", "TypeScript", "Tailwind CSS",
+      "Framer Motion", "HTML5 & CSS3", "Responsive UI/UX",
+      "State Management", "Performance Optimization"
+    ],
+  },
+  {
+    id: "backend",
+    title: "Backend Development",
+    label: "Scalable Logic & APIs",
+    icon: Server,
+    color: "#ff00ff",
+    skills: [
+      "Python", "Node.js", "REST APIs", "PostgreSQL",
+      "Supabase", "Auth (JWT/OAuth)", "WebSockets",
+      "Database Optimization", "Serverless Functions"
     ],
   },
   {
     id: "cloud",
-    title: "Cloud Infrastructure",
-    label: "DEVOPS // CLOUD_SEC",
-    iconName: "Server" as const,
+    title: "Cloud & DevOps",
+    label: "Secure Infrastructure",
+    icon: Network,
     color: "#00f3ff",
-    shadowClass: "shadow-brutalist-cyan hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
-    borderClass: "clipped-border-cyan",
     skills: [
-      "AWS", "Cloud Security", "DevSecOps", "Linux Administration",
-      "Cloudflare R2", "Supabase", "Vercel", "Git",
+      "AWS Services", "Cloud Security", "CI/CD (GitHub Actions)",
+      "Docker", "Linux System Admin", "Cloudflare Pages/R2",
+      "Edge Computing", "Git & Workflows"
     ],
   },
   {
-    id: "net",
-    title: "Networking",
-    label: "PROTOCOLS // ANALYSIS",
-    iconName: "Network" as const,
-    color: "#ffffff",
-    shadowClass: "shadow-brutalist-white hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]",
-    borderClass: "clipped-border",
+    id: "ai",
+    title: "AI & Automation",
+    label: "Intelligent Workflows",
+    icon: Brain,
+    color: "#e60000",
     skills: [
-      "TCP/IP", "DNS", "Packet Analysis",
-      "Wireshark", "Nmap", "Network Monitoring",
+      "LLM Integration", "Python Scripting", "LangChain",
+      "Prompt Engineering", "Vector Databases", "Web Scraping",
+      "Task Automation", "System Integration"
     ],
   },
 ]
 
-function SkillBadge({ skill, color, delay }: { skill: string; color: string; delay: number }) {
-  const ref = use3DTiltBadge()
-  const { play } = useSound()
-  const [hovered, setHovered] = useState(false)
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, scale: 0.7, y: 15 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ delay, duration: 0.5, type: "spring", stiffness: 200, damping: 15 }}
-      viewport={{ once: true }}
-      onMouseEnter={() => { setHovered(true); play("hover") }}
-      onMouseLeave={() => setHovered(false)}
-      className="border px-3.5 py-2 text-xs font-mono font-black uppercase tracking-wider bg-black cursor-default transition-all duration-200"
-      style={{
-        color: hovered ? color : "rgba(255,255,255,0.85)",
-        borderColor: hovered ? color : "rgba(255,255,255,0.12)",
-        boxShadow: hovered ? `0 0 15px ${color}40` : "none",
-      }}
-    >
-      {skill}
-    </motion.div>
-  )
-}
-
-function SkillCategoryCard({ cat, catIdx }: { cat: typeof skillCategories[0]; catIdx: number }) {
-  const { play } = useSound()
-  const [hovered, setHovered] = useState(false)
-  const IconComponent = iconsMap[cat.iconName]
-
-  return (
-    <AnimatedSection
-      key={cat.id}
-      delay={catIdx * 0.08}
-      direction={catIdx % 2 === 0 ? "left" : "right"}
-    >
-      <div
-        className="relative p-6 md:p-8 h-full bg-[#050507]/75 backdrop-blur-md border border-white transition-all duration-300 cursor-pointer hover:translate-x-2 hover:translate-y-2"
-        onMouseEnter={() => {
-          setHovered(true)
-          play("hover")
-        }}
-        onMouseLeave={() => setHovered(false)}
-        style={{
-          boxShadow: hovered ? `0px 0px 0px ${cat.color}` : `8px 8px 0px ${cat.color}`,
-        }}
-      >
-
-
-        {/* Category Header */}
-        <div className="flex items-center justify-between mb-6 relative z-10">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 border flex items-center justify-center text-white"
-              style={{
-                background: `${cat.color}15`,
-                borderColor: `${cat.color}40`,
-              }}
-            >
-              <IconComponent size={20} style={{ color: cat.color }} />
-            </div>
-            <div>
-              <h3 className="text-sm font-black tracking-wider uppercase text-white font-display">{cat.title}</h3>
-              <span
-                className="text-[9px] font-mono tracking-[0.15em] uppercase font-bold"
-                style={{ color: cat.color }}
-              >
-                {cat.label}
-              </span>
-            </div>
-          </div>
-          <div
-            className="text-[10px] font-mono px-3 py-1 border"
-            style={{
-              background: `${cat.color}08`,
-              color: cat.color,
-              borderColor: `${cat.color}25`,
-            }}
-          >
-            {cat.skills.length} MODULES
-          </div>
-        </div>
-
-        {/* Skill Badges Wrapper */}
-        <div className="flex flex-wrap gap-2.5 relative z-10">
-          {cat.skills.map((skill, skillIdx) => (
-            <SkillBadge
-              key={skill}
-              skill={skill}
-              color={cat.color}
-              delay={catIdx * 0.04 + skillIdx * 0.03}
-            />
-          ))}
-        </div>
-      </div>
-    </AnimatedSection>
-  )
-}
-
 export default function Skills() {
   return (
-    <section id="skills" className="relative py-24 md:py-32 overflow-hidden bg-black">
-      {/* Background Grid */}
-      <div className="absolute inset-0 bg-grid-cyber opacity-15" aria-hidden="true" />
-      <div
-        className="orb orb-magenta"
-        style={{ width: 500, height: 500, bottom: "-10%", right: "-5%", opacity: 0.08 }}
-        aria-hidden="true"
-      />
-
+    <section id="skills" className="relative py-24 md:py-32">
       <div className="section-container relative z-10">
-        {/* Section Header */}
-        <AnimatedSection className="text-center mb-20">
-          <div className="section-title-wrap">
-            <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-brand-red font-black">
-              EXPERTISE // STACK_
-            </span>
-          </div>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-4 text-white">
-            SKILLS &amp; <span className="text-brand-red glow-red">TOOLING_</span>
+        <AnimatedSection className="mb-16 text-center">
+          <span className="section-label">Skills</span>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight mt-2">
+            My Technical <span className="text-primary font-display uppercase tracking-wider">Arsenal</span>
           </h2>
-          <p className="text-sm md:text-base text-text-secondary max-w-xl mx-auto font-mono">
-            A full-spectrum offensive, defensive, and engineering arsenal.
+          <p className="text-text-muted mt-4 max-w-2xl mx-auto text-lg font-comic tracking-wider">
+            A full-spectrum defensive, offensive, and full-stack engineering toolset built for the modern web.
           </p>
         </AnimatedSection>
 
         {/* Skill Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {skillCategories.map((cat, catIdx) => (
-            <SkillCategoryCard key={cat.id} cat={cat} catIdx={catIdx} />
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {skillCategories.map((cat, i) => {
+            const Icon = cat.icon
+            return (
+              <AnimatedSection
+                key={cat.id}
+                delay={i * 0.05}
+                className={cat.id === "ai" ? "md:col-span-2 lg:col-span-1" : ""}
+              >
+                <div
+                  className="glass-card p-6 md:p-8 h-full flex flex-col justify-between group hover:border-primary/20 transition-all duration-300"
+                  style={{
+                    "--shadow-color": cat.color,
+                  } as React.CSSProperties}
+                >
+                  {/* Category Header */}
+                  <div className="flex items-center gap-4 mb-6">
+                    <div
+                      className="w-12 h-12 flex items-center justify-center transition-colors"
+                      style={{
+                        background: `${cat.color}15`,
+                        border: `1px solid ${cat.color}25`,
+                      }}
+                    >
+                      <Icon size={24} style={{ color: cat.color }} />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-2xl uppercase tracking-wider text-white leading-tight group-hover:text-primary transition-colors">
+                        {cat.title}
+                      </h3>
+                      <span className="text-[10px] text-text-dim mt-0.5 block uppercase tracking-wider font-mono">{cat.label}</span>
+                    </div>
+                  </div>
+
+                  {/* Skills tags */}
+                  <div className="flex flex-wrap gap-2 mt-auto">
+                    {cat.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border border-border bg-white/[0.01] text-text-muted transition-colors duration-200 hover:border-primary/20 hover:text-white"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </AnimatedSection>
+            )
+          })}
         </div>
       </div>
     </section>

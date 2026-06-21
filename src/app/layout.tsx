@@ -1,24 +1,38 @@
 import type { Metadata, Viewport } from "next"
-import { Space_Grotesk, Inter, Fira_Code } from "next/font/google"
+import { Outfit, JetBrains_Mono, Bangers, Comic_Neue, Russo_One } from "next/font/google"
 import "./globals.css"
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-})
-
-const inter = Inter({
+const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
 })
 
-const firaCode = Fira_Code({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+})
+
+const bangers = Bangers({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: "400",
+  display: "swap",
+})
+
+const comicNeue = Comic_Neue({
+  subsets: ["latin"],
+  variable: "--font-comic",
+  weight: ["300", "400", "700"],
+  display: "swap",
+})
+
+const russoOne = Russo_One({
+  subsets: ["latin"],
+  variable: "--font-russo",
+  weight: "400",
   display: "swap",
 })
 
@@ -27,23 +41,24 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "Juhaim Mohammed M T | Cybersecurity Engineer × Full-Stack Developer",
+  title: "Juhaim Mohammed M T | Cybersecurity Engineer & Full-Stack Developer",
   description:
-    "Portfolio of Juhaim Mohammed M T — Cybersecurity Engineer, Full-Stack Developer & Cloud Security Architect from Kozhikode, Kerala. Building AI-powered security solutions and scalable platforms that defend against tomorrow's threats.",
+    "Portfolio of Juhaim Mohammed M T — Cybersecurity Engineer, Full-Stack Developer & Cloud Security Architect. Building AI-powered security solutions and scalable platforms.",
   keywords: [
     "Cybersecurity Engineer",
     "Full-Stack Developer",
-    "Cloud Security",
-    "SOC Engineer",
-    "React Developer",
+    "Cloud Security Architect",
+    "AI Security",
+    "Threat Detection",
+    "Penetration Testing",
+    "React.js",
     "Next.js",
-    "Kerala",
-    "Juhaim Mohammed",
   ],
   authors: [{ name: "Juhaim Mohammed M T" }],
   openGraph: {
-    title: "Juhaim Mohammed M T | Cybersecurity × Full-Stack",
-    description: "Securing code. Building futures. Defending tomorrow's threats today.",
+    title: "Juhaim Mohammed M T | Cybersecurity & Full-Stack Developer",
+    description:
+      "Building secure, scalable systems — from threat detection to full-stack platforms.",
     type: "website",
   },
 }
@@ -56,7 +71,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${spaceGrotesk.variable} ${inter.variable} ${firaCode.variable} antialiased`}
+        className={`${outfit.variable} ${jetbrainsMono.variable} ${bangers.variable} ${comicNeue.variable} ${russoOne.variable} antialiased`}
       >
         {children}
       </body>
