@@ -5,27 +5,30 @@ import Lenis from "lenis"
 
 export default function SmoothScroll() {
   useEffect(() => {
-    // Initialize Lenis smooth scroll
+    const isMobile = window.innerWidth < 768
+
     const lenis = new Lenis({
-      duration: 1.4,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth easeOutExpo curve
+      duration: isMobile ? 1.0 : 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       syncTouch: true,
-      wheelMultiplier: 0.95,
-      touchMultiplier: 1.8,
+      wheelMultiplier: isMobile ? 0.85 : 0.95,
+      touchMultiplier: isMobile ? 1.5 : 1.8,
     })
 
-    // Setup RequestAnimationFrame loop
     let animId: number
+    let lastTime = 0
     function raf(time: number) {
-      lenis.raf(time)
+      if (time - lastTime >= 16) {
+        lenis.raf(time)
+        lastTime = time
+      }
       animId = requestAnimationFrame(raf)
     }
     animId = requestAnimationFrame(raf)
 
-    // Ensure scrolling behaves well with anchor links
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       const anchor = target.closest("a")
@@ -35,7 +38,7 @@ export default function SmoothScroll() {
           const el = document.getElementById(targetId)
           if (el) {
             e.preventDefault()
-            lenis.scrollTo(el, { offset: -80 })
+            lenis.scrollTo(el, { offset: isMobile ? -60 : -80 })
           }
         }
       }
