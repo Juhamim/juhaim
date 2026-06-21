@@ -34,10 +34,11 @@
 
 
   /* Fonts */
-  --font-display: "Bangers", cursive;
-  --font-sans: "Outfit", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-comic: "Comic Neue", cursive;
+  --font-display: var(--font-bangers-display), cursive;
+  --font-sans: var(--font-outfit-sans), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+  --font-comic: var(--font-comic-neue), cursive;
+  --font-russo: var(--font-russo-one), sans-serif;
 
   /* Radii (Chill Pill utilizes sharp clipped corners and pills) */
   --radius-sm: 8px;

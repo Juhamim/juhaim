@@ -4,34 +4,34 @@ import "./globals.css"
 
 const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-outfit-sans",
   display: "swap",
 })
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-jetbrains-mono",
   weight: ["400", "500", "600", "700"],
   display: "swap",
 })
 
 const bangers = Bangers({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-bangers-display",
   weight: "400",
   display: "swap",
 })
 
 const comicNeue = Comic_Neue({
   subsets: ["latin"],
-  variable: "--font-comic",
+  variable: "--font-comic-neue",
   weight: ["300", "400", "700"],
   display: "swap",
 })
 
 const russoOne = Russo_One({
   subsets: ["latin"],
-  variable: "--font-russo",
+  variable: "--font-russo-one",
   weight: "400",
   display: "swap",
 })
