@@ -158,15 +158,6 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
         >
           <ProjectPattern pattern={project.pattern} color={project.color} />
 
-          {/* Cyber corner brackets */}
-          <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? project.color : undefined }} />
-          <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? project.color : undefined }} />
-          <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? project.color : undefined }} />
-          <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? project.color : undefined }} />
-
-          {/* Dynamic grid texture overlay on hover */}
-          <div className="absolute inset-0 bg-grid-cyber-fine opacity-0 group-hover:opacity-15 transition-opacity duration-300 pointer-events-none" />
-
           <div className="relative z-10 p-6 md:p-8 flex flex-col h-full flex-1">
             {/* Top: icon + tag */}
             <div className="flex items-center justify-between mb-6">

@@ -82,11 +82,7 @@ function CertificationCard({ cert, index }: { cert: typeof certifications[0]; in
           boxShadow: hovered ? `0px 0px 0px ${cert.color}` : `8px 8px 0px ${cert.color}`,
         }}
       >
-        {/* Cyber corner brackets */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cert.color : undefined }} />
-        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cert.color : undefined }} />
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cert.color : undefined }} />
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? cert.color : undefined }} />
+
 
         {/* Icon & badge */}
         <div className="flex items-center justify-between relative z-10">

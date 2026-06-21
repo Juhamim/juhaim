@@ -108,11 +108,7 @@ function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
         boxShadow: hovered ? `0px 0px 0px ${stat.color}` : `6px 6px 0px ${stat.color}`,
       }}
     >
-      {/* Cyber corner brackets */}
-      <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? stat.color : undefined }} />
-      <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? stat.color : undefined }} />
-      <div className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? stat.color : undefined }} />
-      <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? stat.color : undefined }} />
+
 
       {/* Icon */}
       <div className="flex justify-center mb-4 text-white relative z-10">

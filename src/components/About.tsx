@@ -98,14 +98,7 @@ function NarrativeCard({ item, index }: { item: typeof narrativePoints[0]; index
           boxShadow: hovered ? `0px 0px 0px ${item.color}` : `8px 8px 0px ${item.color}`,
         }}
       >
-        {/* Dynamic scanline pattern overlay on hover */}
-        <div className="absolute inset-0 bg-grid-cyber-fine opacity-0 group-hover:opacity-15 transition-opacity duration-300 pointer-events-none" />
 
-        {/* Cyber corner brackets */}
-        <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? item.color : undefined }} />
-        <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? item.color : undefined }} />
-        <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? item.color : undefined }} />
-        <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? item.color : undefined }} />
 
         {/* Top row */}
         <div className="flex items-start justify-between mb-6 relative z-10">

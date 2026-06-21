@@ -95,11 +95,7 @@ export default function Contact() {
                 boxShadow: hovered ? "0px 0px 0px #e60000" : "8px 8px 0px #e60000",
               }}
             >
-              {/* Cyber corner brackets */}
-              <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? "#e60000" : undefined }} />
-              <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? "#e60000" : undefined }} />
-              <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b border-l border-white/20 transition-all duration-200" style={{ borderColor: hovered ? "#e60000" : undefined }} />
-              <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b border-r border-white/20 transition-all duration-200" style={{ borderColor: hovered ? "#e60000" : undefined }} />
+
 
               {/* Decorative radial overlay */}
               <div
